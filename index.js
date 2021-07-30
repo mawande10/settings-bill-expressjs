@@ -20,7 +20,16 @@ app.get('/', function(req, res){
         smsCost: settingsBill.getSmsCost().toFixed(2),
         warningLevel: settingsBill.getWarningLevel().toFixed(2),
         criticalLevel: settingsBill.getCriticalLevel().toFixed(2)
-    }});
+    },
+    totals: {
+        callCostTotal: settingsBill.getCallCostTotal().toFixed(2),
+        smsCostTotal: settingsBill.getSmsCostTotal().toFixed(2),
+        grandTotal: settingsBill.getOverallTotalSettings(),
+        level: settingsBill.getClassNameLevel(settingsBill.getOverallTotalSettings())
+    }
+   
+});
+//console.log(settingsBill.getClassNameLevel(settingsBill.getOverallTotalSettings()));
 });
 
 app.post('/settings', function(req, res){
@@ -34,12 +43,15 @@ app.post('/settings', function(req, res){
     res.redirect('/');
 });
 
-app.post('/action', function(){
+app.post('/action', function(req, res){
+    settingsBill.calculateTotalBills(req.body.actionType);
 
+    //console.log(req.body.actionType);
+    res.redirect('/');
 });
 
-app.get('/actions', function(){
-
+app.get('/actions', function(req, res){
+    res.render('actions');
 });
 
 app.get('actions/:type', function(){

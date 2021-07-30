@@ -12,7 +12,8 @@ module.exports = function CalculateBillsSettings(){
         if (overallTotal < levelCritical){
             if (checkedBill === 'call'){
                 callCostTotal += callCost;
-            }else{
+            }
+            else if(checkedBill === 'sms'){
                 smsCostTotal += smsCost;
             }
         }
