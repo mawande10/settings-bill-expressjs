@@ -1,10 +1,13 @@
-module.exports = function CalculateBillsSettings(){
+
+module.exports = function CalculateBillsSettings(moment){
     var callCost = 0.00;
     var smsCost = 0;
     var levelWarning = 0.00;
     var levelCritical = 0.00;
     var callCostTotal = 0.00;
     var smsCostTotal = 0.00;
+    
+    var actionList = [];
 
     function calculateTotalBills(checkedBill) {
         var overallTotal = getOverallTotalSettings();
@@ -51,6 +54,43 @@ module.exports = function CalculateBillsSettings(){
             criticalLevelAmount = parseFloat(criticalLeveCost);
         }
         levelCritical = criticalLevelAmount;
+    }
+
+    function recordAction(action){
+        var cost = 0;
+        if (action === 'call'){
+            cost = callCost;
+        }else if (action === 'sms'){
+            cost = smsCost;
+        }
+
+        actionList.push({
+            type: action,
+            cost,
+            timeframe: moment().format("ddd, MMM Do YYYY, h:mm:ss a")
+        });
+    }
+
+    function action(){
+        return actionList;
+    }
+
+    function actionsFor(type){
+        const filteredActions = [];
+
+        // loop through all the entries in the action list 
+        for (let index = 0; index < actionList.length; index++) {
+            const action = actionList[index];
+            // check this is the type we are doing the total for 
+            if (action.type === type) {
+                // add the action to the list
+                filteredActions.push(action);
+            }
+        }
+
+        return filteredActions;
+
+        // return actionList.filter((action) => action.type === type);
     }
 
     function getCallCost(){
@@ -110,6 +150,9 @@ module.exports = function CalculateBillsSettings(){
         getCallCost,
         getSmsCost,
         getWarningLevel,
-        getCriticalLevel
+        getCriticalLevel,
+        recordAction,
+        action,
+        actionsFor
     }
 }
