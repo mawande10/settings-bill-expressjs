@@ -8,7 +8,8 @@ describe('settings-bills', function(){
     context('Recording calls', function(){
         it('should be able to record calls', function(){
             settingsBill.recordAction('call');
-            assert.equal(1, settingsBill.actionsFor('call').length);
+            settingsBill.recordAction('call')
+            assert.equal(2, settingsBill.actionsFor('call').length);
         });
     });
     
@@ -77,6 +78,24 @@ describe('settings-bills', function(){
         });
     });
 
+    context('With no setted call cost', function(){
+        it('should return a total of 0.00 for a call', function(){
+            const settingsBill = SettingsBill(moment);
+            settingsBill.setCallCost();
+            settingsBill.calculateTotalBills('call');
+            assert.strictEqual(0.00, settingsBill.getCallCostTotal());
+        });
+    });
+
+    context('With no setted sms cost', function(){
+        it('should return a total of 0.00 for an sms', function(){
+            const settingsBill = SettingsBill(moment);
+            settingsBill.setSmsCost();
+            settingsBill.calculateTotalBills('sms');
+            assert.strictEqual(0.00, settingsBill.getSmsCostTotal());
+        });
+    });
+
     context('Notice warning level', function(){
         it('the overall total should change color when warning level is reached', function(){
             const settingsBill = SettingsBill(moment);
@@ -95,6 +114,30 @@ describe('settings-bills', function(){
             assert.strictEqual(4, settingsBill.getSmsCostTotal());
             assert.strictEqual(10, settingsBill.getOverallTotalSettings());
            assert.strictEqual('warning', settingsBill.getClassNameLevel(settingsBill.getOverallTotalSettings()))
+        });
+    });
+
+    context('Notice critical level', function(){
+        it('the overall total should change color when critical level is reached and stop add new costs', function(){
+            const settingsBill = SettingsBill(moment);
+            settingsBill.setCallCost(3);
+            settingsBill.setSmsCost(2);
+            settingsBill.setWarningLevel(10.00);
+            settingsBill.setCriticalLevel(20.00);
+
+            settingsBill.calculateTotalBills('call');
+            settingsBill.calculateTotalBills('call');
+            settingsBill.calculateTotalBills('call');
+            settingsBill.calculateTotalBills('call');
+            settingsBill.calculateTotalBills('call');
+            settingsBill.calculateTotalBills('sms');
+            settingsBill.calculateTotalBills('sms');
+            settingsBill.calculateTotalBills('sms');
+            
+            assert.strictEqual(15, settingsBill.getCallCostTotal());
+            assert.strictEqual(6, settingsBill.getSmsCostTotal());
+            assert.strictEqual(21, settingsBill.getOverallTotalSettings());
+            assert.strictEqual('danger', settingsBill.getClassNameLevel(settingsBill.getOverallTotalSettings()))
         });
     });
 });

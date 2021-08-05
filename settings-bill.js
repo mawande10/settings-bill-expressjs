@@ -67,7 +67,7 @@ module.exports = function CalculateBillsSettings(moment){
         actionList.push({
             type: action,
             cost,
-            timeframe: moment().format("ddd, MMM Do YYYY, h:mm:ss a")
+            timeframe: moment().add('0 to 44 seconds').fromNow()
         });
     }
 
