@@ -19,9 +19,9 @@ app.use(express.static('public'));
 app.get('/', function(req, res){
     res.render('index', { settings: {
         callCost: settingsBill.getCallCost(),
-        smsCost: settingsBill.getSmsCost().toFixed(2),
-        warningLevel: settingsBill.getWarningLevel().toFixed(2),
-        criticalLevel: settingsBill.getCriticalLevel().toFixed(2)
+        smsCost: settingsBill.getSmsCost(),
+        warningLevel: settingsBill.getWarningLevel(),
+        criticalLevel: settingsBill.getCriticalLevel()
     },
     totals: {
         callCostTotal: settingsBill.getCallCostTotal().toFixed(2),
