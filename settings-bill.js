@@ -64,11 +64,13 @@ module.exports = function CalculateBillsSettings(moment){
             cost = smsCost;
         }
 
-        actionList.push({
-            type: action,
-            cost,
-            timeframe: moment().fromNow()
-        });
+        if (action === 'call' || action === 'sms') {
+            actionList.push({
+                type: action,
+                cost,
+                timeframe: moment().fromNow()
+            });
+        }
     }
 
     function action(){
