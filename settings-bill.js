@@ -1,7 +1,7 @@
 
 module.exports = function CalculateBillsSettings(moment){
     var callCost = 0.00;
-    var smsCost = 0;
+    var smsCost = 0.00;
     var levelWarning = 0.00;
     var levelCritical = 0.00;
     var callCostTotal = 0.00;
@@ -67,7 +67,7 @@ module.exports = function CalculateBillsSettings(moment){
         actionList.push({
             type: action,
             cost,
-            timeframe: moment().add('0 to 44 seconds').fromNow()
+            timeframe: moment().fromNow()
         });
     }
 
@@ -115,13 +115,14 @@ module.exports = function CalculateBillsSettings(moment){
     function getClassNameLevel(totalOverall){
         // console.log(totalOverall);
         // console.log(levelCritical);
+        if (totalOverall === 0.00) {
+            return 'totalSettings';
+        }
         if (totalOverall >= levelCritical){
             return 'danger';
         }else if (totalOverall >= levelWarning){
             return 'warning';
-        }else {
-            return 'totalSettings';
-        }
+        } 
     }
 
     function getCallCostTotal() {
