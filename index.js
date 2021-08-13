@@ -4,9 +4,8 @@ let bodyParser = require('body-parser');
 let moment = require('moment');
 let CalculateBillsSettings = require('./settings-bill');
 let app = express();
-
-
 moment().format();
+
 const settingsBill = CalculateBillsSettings(moment);
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -47,6 +46,7 @@ app.post('/settings', function(req, res){
 
 app.post('/action', function(req, res){
     settingsBill.calculateTotalBills(req.body.actionType);
+   
 
     //console.log(req.body.actionType);
     settingsBill.recordAction(req.body.actionType);
@@ -54,11 +54,22 @@ app.post('/action', function(req, res){
 });
 
 app.get('/actions', function(req, res){
+    let actions = settingsBill.action();
+
+    actions.forEach(item => {
+        item.timeframes = moment(item.timeframe).fromNow();
+    })
     res.render('actions', { actions: settingsBill.action()});
 });
 
 app.get('/actions/:actionType', function(req, res){
     const actionType = req.params.actionType;
+
+    let actions = settingsBill.action();
+
+    actions.forEach(item => {
+        item.timeframes = moment(item.timeframe).fromNow();
+    })
     res.render('actions', {actions: settingsBill.actionsFor(actionType)});
 });
 

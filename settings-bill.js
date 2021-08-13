@@ -1,5 +1,5 @@
 
-module.exports = function CalculateBillsSettings(moment){
+module.exports = function CalculateBillsSettings(){
     var callCost = 0.00;
     var smsCost = 0.00;
     var levelWarning = 0.00;
@@ -68,7 +68,7 @@ module.exports = function CalculateBillsSettings(moment){
             actionList.push({
                 type: action,
                 cost,
-                timeframe: moment().fromNow()
+                timeframe: new Date()
             });
         }
     }
